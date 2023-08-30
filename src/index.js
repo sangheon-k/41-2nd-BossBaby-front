@@ -6,6 +6,9 @@ import { store } from './redux/store';
 import Router from './Router';
 import theme from './styles/theme';
 import GlobalStyle from './styles/GlobalStyle';
+import ReactModal from 'react-modal';
+
+ReactModal.setAppElement('#root');
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(

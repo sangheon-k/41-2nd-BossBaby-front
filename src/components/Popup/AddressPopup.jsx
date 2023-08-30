@@ -6,8 +6,10 @@ import { useInfiniteQuery } from 'react-query';
 import { useSelector } from 'react-redux';
 import { useDispatch } from 'react-redux';
 import { setSearchKeyword } from '../../redux/slices/paymentSlice';
+import InfiniteScroll from 'react-infinite-scroller';
 const customStyles = {
   content: {
+    overflow: 'auto',
     top: '50%',
     left: '50%',
     right: 'auto',
@@ -22,7 +24,7 @@ const AddressPopup = ({ onClose }) => {
   const keyword = useSelector(state => state.payment.searchKeyword);
   const initialParams = { currentPage: 1, countPerPage: 20, keyword: keyword };
 
-  const { data, remove, refetch, fetchNextPage, hasNextPage } =
+  const { data, isLoading, remove, refetch, fetchNextPage, hasNextPage } =
     useInfiniteQuery({
       queryKey: ['search-address'],
       queryFn: ({ pageParam = initialParams }) => searchAddress(pageParam),
@@ -54,9 +56,7 @@ const AddressPopup = ({ onClose }) => {
     refetch();
   };
 
-  const handleNextPage = () => {
-    fetchNextPage();
-  };
+  console.log(addresses);
 
   return (
     <ReactModal isOpen onRequestClose={onClose} style={customStyles}>
@@ -67,7 +67,25 @@ const AddressPopup = ({ onClose }) => {
           onChange={handleChangeKeyword}
           onKeyDown={e => e.key === 'Enter' && handleSearchAddress(e)}
         />
-        <button onClick={handleNextPage}>증가</button>
+        <button onClick={fetchNextPage}>증가</button>
+        <ContentWrap>
+          <InfiniteScroll
+            pageStart={0}
+            loadMore={fetchNextPage}
+            threshold={10}
+            hasMore={hasNextPage}
+            useWindow={false}
+            loader={
+              <div className="loader" key={0}>
+                Loading ...
+              </div>
+            }
+          >
+            {addresses.map(el => {
+              return <p>{el.roadAddrPart1}</p>;
+            })}
+          </InfiniteScroll>
+        </ContentWrap>
       </ModalWrapper>
     </ReactModal>
   );
@@ -94,4 +112,10 @@ export const searchAddress = async pageParam => {
 const ModalWrapper = styled.div`
   width: 400px;
   height: 300px;
+`;
+
+const ContentWrap = styled.div`
+  overflow: auto;
+  width: 400px;
+  height: 250px;
 `;

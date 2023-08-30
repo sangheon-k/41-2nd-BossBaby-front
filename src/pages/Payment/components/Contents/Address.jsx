@@ -4,6 +4,7 @@ import { useSelector } from 'react-redux';
 import styled from 'styled-components';
 import AddressPopup from '../../../../components/Popup/AddressPopup';
 import { setPopups } from '../../../../redux/slices/commonSlice';
+import { setSearchKeyword } from '../../../../redux/slices/paymentSlice';
 import Title from '../Common/Title';
 
 const Address = ({ payInfo, setPayInfo }) => {
@@ -16,8 +17,13 @@ const Address = ({ payInfo, setPayInfo }) => {
     setPayInfo(newPayInfo);
   };
 
-  const handleSearch = () => {
+  const handleSearch = e => {
+    dispatch(setSearchKeyword(payInfo.address));
     dispatch(setPopups('address'));
+  };
+
+  const handleClosePopup = () => {
+    dispatch(setPopups(''));
   };
 
   return (
@@ -37,7 +43,7 @@ const Address = ({ payInfo, setPayInfo }) => {
       </InputWrap>
 
       {/* 주소검색 팝업 */}
-      {popup === 'address' && <AddressPopup />}
+      {popup === 'address' && <AddressPopup onClose={handleClosePopup} />}
     </AddressInfo>
   );
 };

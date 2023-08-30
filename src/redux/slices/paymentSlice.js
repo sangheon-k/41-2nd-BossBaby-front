@@ -7,6 +7,7 @@ const initialState = {
   point: 0,
   laundry_fee: 3000,
   total_price: 0,
+  searchKeyword: '',
 };
 
 const paymentSlice = createSlice({
@@ -30,8 +31,15 @@ const paymentSlice = createSlice({
         address: action.payload,
       };
     },
+    setSearchKeyword: (prevState, action) => {
+      return {
+        ...prevState,
+        searchKeyword: action.payload,
+      };
+    },
   },
 });
 
-export const { getProductInfo, saveAddress } = paymentSlice.actions;
+export const { getProductInfo, saveAddress, setSearchKeyword } =
+  paymentSlice.actions;
 export default paymentSlice.reducer;
